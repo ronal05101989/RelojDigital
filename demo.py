@@ -23,10 +23,11 @@ random.seed(7)
 with db.db() as con:
     con.execute("INSERT INTO horarios (nombre, entrada, salida, tolerancia_min, descanso_min, dias) "
                 "VALUES ('Turno tarde', '14:00', '22:00', 5, 30, '0,1,2,3,4,5')")
+    turno_tarde = con.execute("SELECT MAX(id) FROM horarios").fetchone()[0]
     for i in range(1, 101):
         nombre = f"{random.choice(NOMBRES)} {random.choice(APELLIDOS)} {random.choice(APELLIDOS)}"
         con.execute("INSERT INTO empleados (codigo, nombre, departamento, horario_id) VALUES (?, ?, ?, ?)",
-                    (str(i), nombre, random.choice(DEPTOS), 2 if i > 80 else 1))
+                    (str(i), nombre, random.choice(DEPTOS), turno_tarde if i > 80 else 1))
 
     hoy, ahora = date.today(), datetime.now()
     for i in range(1, 101):

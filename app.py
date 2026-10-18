@@ -227,7 +227,7 @@ def reportes():
 @app.route("/reportes/excel")
 def reporte_excel():
     desde, hasta, codigo, depto = _params_reporte()
-    tipo = request.args.get("tipo", "completo")
+    tipo = "completo" if request.args.get("todos") else request.args.get("tipo", "completo")
     tipos = [tipo] if tipo in calculo.REPORTES else list(calculo.REPORTES)
     with db() as con:
         filas = calculo.detalle(con, desde, hasta, codigo, depto)

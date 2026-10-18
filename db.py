@@ -105,6 +105,16 @@ def inicializar():
             con.execute("INSERT INTO horarios (nombre, entrada, salida) "
                         "VALUES ('General', '08:00', '17:00')")
 
+        for nombre, entrada, salida, descanso in (
+            ("07:00 a 16:00", "07:00", "16:00", 60),
+            ("08:00 a 18:00", "08:00", "18:00", 60),
+            ("07:00 a 13:00", "07:00", "13:00", 0),
+        ):
+            if not con.execute("SELECT 1 FROM horarios WHERE entrada=? AND salida=? AND dias='0,1,2,3,4'",
+                               (entrada, salida)).fetchone():
+                con.execute("INSERT INTO horarios (nombre, entrada, salida, descanso_min, dias) VALUES (?, ?, ?, ?, '0,1,2,3,4')",
+                            (nombre, entrada, salida, descanso))
+
 
 def ajuste(con, clave, defecto=""):
     fila = con.execute("SELECT valor FROM ajustes WHERE clave = ?", (clave,)).fetchone()
